@@ -9,7 +9,7 @@ import retrofit.RestAdapter;
  */
 
 public class Etsy {
-    private static final String API_KEY = "";
+    private static final String API_KEY = "qt07eb0z17a6n55iohz6wjel";
 
     private static RequestInterceptor getInterceptor() {
         return new RequestInterceptor() {
