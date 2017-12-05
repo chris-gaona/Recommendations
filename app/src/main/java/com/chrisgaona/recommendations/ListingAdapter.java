@@ -22,11 +22,13 @@ import retrofit.client.Response;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder> implements Callback<ActiveListings> {
 
+    private MainActivity mMainActivity;
     private final LayoutInflater inflater;
     private ActiveListings mActiveListings;
 
-    public ListingAdapter (Context context) {
-        inflater = LayoutInflater.from(context);
+    public ListingAdapter (MainActivity activity) {
+        mMainActivity = activity;
+        inflater = LayoutInflater.from(activity);
     }
 
     @Override
@@ -63,11 +65,16 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     public void success(ActiveListings activeListings, Response response) {
         mActiveListings = activeListings;
         notifyDataSetChanged();
+        mMainActivity.showList();
     }
 
     @Override
     public void failure(RetrofitError error) {
+        mMainActivity.showError();
+    }
 
+    public ActiveListings getActiveListings() {
+        return mActiveListings;
     }
 
     public class ListingHolder extends RecyclerView.ViewHolder {

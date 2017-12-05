@@ -12,7 +12,7 @@ import retrofit.http.Query;
 
 public interface Api {
 
-    @GET("/listing/active")
+    @GET("/listings/active")
     void activeListings(@Query("includes") String includes,
                         Callback<ActiveListings> callback);
 }
