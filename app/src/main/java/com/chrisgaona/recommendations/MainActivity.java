@@ -1,5 +1,6 @@
 package com.chrisgaona.recommendations;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.chrisgaona.recommendations.api.Etsy;
+import com.chrisgaona.recommendations.google.GoogleServicesHelper;
 import com.chrisgaona.recommendations.model.ActiveListings;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private View mProgressBar;
     private TextView mErrorView;
 
+    private GoogleServicesHelper mGoogleServicesHelper;
     private ListingAdapter adapter;
 
     @Override
@@ -36,19 +39,33 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ListingAdapter(this);
         mRecyclerView.setAdapter(adapter);
 
-        if (savedInstanceState == null) {
-            showLoading();
-            Etsy.getActiveListings(adapter);
-        } else {
+        showLoading();
 
+        mGoogleServicesHelper = new GoogleServicesHelper(this, adapter);
+
+        if (savedInstanceState == null) {
             if (savedInstanceState.containsKey(STATE_ACTIVE_LISTINGS)) {
                 adapter.success((ActiveListings) savedInstanceState.getParcelable(STATE_ACTIVE_LISTINGS), null);
-                showList();
-            } else {
-                showLoading();
-                Etsy.getActiveListings(adapter);
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleServicesHelper.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleServicesHelper.disconnect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mGoogleServicesHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override

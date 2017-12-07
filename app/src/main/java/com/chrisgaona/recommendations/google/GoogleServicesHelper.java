@@ -24,6 +24,11 @@ public class GoogleServicesHelper implements GoogleApiClient.ConnectionCallbacks
     private GoogleServicesListener mListener;
     private GoogleApiClient mApiClient;
 
+    public interface GoogleServicesListener {
+        public void onConnected();
+        public void onDisconnected();
+    }
+
     public GoogleServicesHelper(Activity activity, GoogleServicesListener listener) {
         mListener = listener;
         mActivity = activity;
@@ -31,11 +36,6 @@ public class GoogleServicesHelper implements GoogleApiClient.ConnectionCallbacks
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-    }
-
-    public interface GoogleServicesListener {
-        public void onConnected();
-        public void onDisconnected();
     }
 
     public void connect() {
