@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.chrisgaona.recommendations.api.Etsy;
 import com.chrisgaona.recommendations.google.GoogleServicesHelper;
 import com.chrisgaona.recommendations.model.ActiveListings;
 import com.chrisgaona.recommendations.model.Listing;
+import com.google.android.gms.plus.PlusOneButton;
 import com.squareup.picasso.Picasso;
 
 import retrofit.Callback;
@@ -49,9 +51,11 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         holder.mShopNameView.setText(listing.Shop.shop_name);
 
         if (isGooglePlayServicesAvailable) {
-
+            holder.mPlusOneButton.setVisibility(View.VISIBLE);
+            holder.mPlusOneButton.initialize(listing.url, position);
+            holder.mPlusOneButton.setAnnotation(PlusOneButton.ANNOTATION_NONE);
         } else {
-
+            holder.mPlusOneButton.setVisibility(View.GONE);
         }
 
         Picasso.with(holder.mImageView.getContext())
@@ -119,6 +123,8 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         public TextView mTitleView;
         public TextView mShopNameView;
         public TextView mPriceView;
+        public PlusOneButton mPlusOneButton;
+        public ImageButton mShareButton;
 
         public ListingHolder(View itemView) {
             super(itemView);
@@ -127,6 +133,8 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
             mTitleView = itemView.findViewById(R.id.listing_title);
             mShopNameView = itemView.findViewById(R.id.listing_shop_name);
             mPriceView = itemView.findViewById(R.id.listing_price);
+            mPlusOneButton = itemView.findViewById(R.id.listing_plus_one_btn);
+            mShareButton = itemView.findViewById(R.id.listing_share_button);
         }
     }
 }

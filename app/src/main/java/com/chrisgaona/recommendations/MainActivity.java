@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mGoogleServicesHelper.handleActivityResult(requestCode, resultCode, data);
+
+        // update state of plusOneButton
+        adapter.notifyDataSetChanged();
     }
 
     @Override
