@@ -67,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         mGoogleServicesHelper.handleActivityResult(requestCode, resultCode, data);
 
-        // update state of plusOneButton
-        adapter.notifyDataSetChanged();
+        if (requestCode == ListingAdapter.REQUEST_CODE_PLUS_ONE) {
+            // update state of plusOneButton
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

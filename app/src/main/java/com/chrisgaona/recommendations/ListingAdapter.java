@@ -1,6 +1,8 @@
 package com.chrisgaona.recommendations;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.chrisgaona.recommendations.google.GoogleServicesHelper;
 import com.chrisgaona.recommendations.model.ActiveListings;
 import com.chrisgaona.recommendations.model.Listing;
 import com.google.android.gms.plus.PlusOneButton;
+import com.google.android.gms.plus.PlusShare;
 import com.squareup.picasso.Picasso;
 
 import retrofit.Callback;
@@ -25,6 +28,9 @@ import retrofit.client.Response;
  */
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder> implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener {
+
+    public static final int REQUEST_CODE_PLUS_ONE = 10;
+    public static final int REQUEST_CODE_SHARE = 11;
 
     private MainActivity mMainActivity;
     private final LayoutInflater inflater;
@@ -52,10 +58,34 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
 
         if (isGooglePlayServicesAvailable) {
             holder.mPlusOneButton.setVisibility(View.VISIBLE);
-            holder.mPlusOneButton.initialize(listing.url, position);
+            holder.mPlusOneButton.initialize(listing.url, REQUEST_CODE_PLUS_ONE);
             holder.mPlusOneButton.setAnnotation(PlusOneButton.ANNOTATION_NONE);
+
+            holder.mShareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new PlusShare.Builder(mMainActivity)
+                            .setType("text/plain")
+                            .setText("Checkout this item on Etsy " + listing.title)
+                            .setContentUrl(Uri.parse(listing.url))
+                            .getIntent();
+
+                    mMainActivity.startActivityForResult(intent, REQUEST_CODE_SHARE);
+                }
+            });
         } else {
             holder.mPlusOneButton.setVisibility(View.GONE);
+
+            holder.mShareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, "Checkout this item on Etsy " + listing.title + " "  + listing.url);
+                    intent.setType("text/plain");
+
+                    mMainActivity.startActivityForResult(Intent.createChooser(intent, "Share"), REQUEST_CODE_SHARE);
+                }
+            });
         }
 
         Picasso.with(holder.mImageView.getContext())

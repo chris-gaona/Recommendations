@@ -32,10 +32,10 @@ public class GoogleServicesHelper implements GoogleApiClient.ConnectionCallbacks
     public GoogleServicesHelper(Activity activity, GoogleServicesListener listener) {
         mListener = listener;
         mActivity = activity;
-        mApiClient = new GoogleApiClient.Builder(mActivity)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+//        mApiClient = new GoogleApiClient.Builder(mActivity)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
     }
 
     public void connect() {
